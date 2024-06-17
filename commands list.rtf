@@ -1,108 +1,37 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2761
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fswiss\fcharset0 Helvetica-BoldOblique;
-}
-{\colortbl;\red255\green255\blue255;\red251\green0\blue7;\red45\green198\blue255;\red44\green197\blue255;
-\red44\green197\blue255;}
-{\*\expandedcolortbl;;\cssrgb\c100000\c0\c0;\cssrgb\c18604\c81903\c100000;\cssrgb\c18374\c81608\c100000;
-\cssrgb\c18374\c81608\c100000;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww30040\viewh18900\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+THIS IS THE LIST OF COMMANDS THAT WE WILL BE USING:
 
-\f0\b\fs64 \cf0 \ul \ulc0 THIS IS THE LIST OF COMMANDS THAT WE WILL BE USING:
-\f1\b0\fs24 \
-\ulnone \
+#FOR INSTALLING THE LATEST VERSION OF KAFKA#
+wget https://downloads.apache.org/kafka/3.7.0/kafka_2.12-3.7.0.tgz
 
-\f2\i\b\fs34 #FOR INSTALLING THE LATEST VERSION OF KAFKA#
-\fs24 \
+#UNZIPPING THE KAFKA FILE#
+tar -xvf kafka_2.12-3.7.0.tgz
 
-\f1\i0\b0 wget https://downloads.apache.org/kafka/3.7.0/kafka_2.12-3.7.0.tgz\
-\
+#INSTALLING JAVA#
+sudo yum install java-1.8.0-openjdk
 
-\f2\i\b\fs34 #UNZIPPING THE KAFKA FILE#
-\f1\i0\b0\fs24 \
-tar -xvf kafka_2.12-3.7.0.tgz\
-\
+#STARTING ZOOKEEPER#
+cd kafka_2.12-3.3.1
+bin/zookeeper-server-start.sh config/zookeeper.properties
 
-\f2\i\b\fs34 #INSTALLING JAVA#
-\f1\i0\b0\fs24 \
-sudo yum install java-1.8.0-openjdk\
-\
+#STARTING KAFKA SERVER#
+$OPEN A NEW TERMINAL WINDOW FOR STARTING THE KAFKA SERVER$
+export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"    (THIS COMMAND IS TO INCREASE THE MEMORY SIZE OF KAFKA)
+cd kafka_2.12-3.7.0/
+bin/kafka-server-start.sh config/server.properties
 
-\f2\i\b\fs34 #STARTING ZOOKEEPER#
-\f1\i0\b0\fs24 \
-cd kafka_2.12-3.3.1\
-bin/zookeeper-server-start.sh config/zookeeper.properties\
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+$OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
+sudo nano config/server.properties
+(IN THIS FILE, CHANGE THE ADVERTISED_LISTENERS TO THE PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE)
 
-\f2\i\b\fs34 \cf0 #STARTING KAFKA SERVER#
-\f1\i0\b0\fs24 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+#CREATING TOPIC#
+$OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
+cd kafka_2.12-3.7.0/
+bin/kafka-topics.sh --create --topic marketstream --bootstrap-server {REPLACE THIS PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE}:9092 --replication-factor 1 --partitions 1
 
-\f2\i\b\fs30 \cf2 $OPEN A NEW TERMINAL WINDOW FOR STARTING THE KAFKA SERVER$
-\f1\i0\b0\fs24 \cf0 \
-export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"    
-\f2\i\b (THIS COMMAND IS TO INCREASE THE MEMORY SIZE OF KAFKA)
-\f1\i0\b0 \
-cd kafka_2.12-3.7.0/\
-bin/kafka-server-start.sh config/server.properties\
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+#STARTING PRODUCER#
+bin/kafka-console-producer.sh --topic marketstream --bootstrap-server {REPLACE THIS PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE}:9092
 
-\f2\i\b\fs30 \cf2 $OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
-\f1\i0\b0\fs24 \cf0 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 sudo nano config/server.properties\
-
-\f2\i\b (IN THIS FILE, CHANGE THE 
-\f1\i0\b0 ADVERTISED_LISTENERS 
-\f2\i\b TO THE \cf3 PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE\cf0 )
-\f1\i0\b0 \
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f2\i\b\fs34 \cf0 #CREATING TOPIC#
-\f1\i0\b0\fs24 \
-
-\f2\i\b\fs30 \cf2 $OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
-\f1\i0\b0\fs24 \cf0 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 cd kafka_2.12-3.7.0/\
-bin/kafka-topics.sh --create --topic marketstream --bootstrap-server \cf4 \{
-\f2\i\b REPLACE THIS
-\f1\i0\b0  
-\f2\i\b PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE\}
-\f1\i0\b0 \cf0 :9092 --replication-factor 1 --partitions 1\
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f2\i\b\fs34 \cf0 #STARTING PRODUCER#
-\f1\i0\b0\fs24 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 bin/kafka-console-producer.sh --topic marketstream --bootstrap-server \cf5 \{
-\f2\i\b REPLACE THIS
-\f1\i0\b0  
-\f2\i\b PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE\}
-\f1\i0\b0 \cf0 :9092\
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f2\i\b\fs34 \cf0 #STARTING CONSUMER#
-\f1\i0\b0\fs24 \
-
-\f2\i\b\fs30 \cf2 $OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
-\f1\i0\b0\fs24 \cf0 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 cd kafka_2.12-3.3.1\
-bin/kafka-console-consumer.sh --topic marketstream --bootstrap-server \cf5 \{
-\f2\i\b REPLACE THIS
-\f1\i0\b0  
-\f2\i\b PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE\}
-\f1\i0\b0 \cf0 :9092\
-\
-\
-\
-\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 \
-}
+#STARTING CONSUMER#
+$OPEN A NEW TERMINAL WINDOW  & LAUNCH YOUR EC2 INSTANCE AGAIN$
+cd kafka_2.12-3.3.1
+bin/kafka-console-consumer.sh --topic marketstream --bootstrap-server {REPLACE THIS PUBLIC IP ADDRESS OF YOUR EC2 INSTANCE}:9092
